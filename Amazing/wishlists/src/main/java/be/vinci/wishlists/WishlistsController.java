@@ -1,5 +1,6 @@
 package be.vinci.wishlists;
 
+import be.vinci.wishlists.models.Product;
 import be.vinci.wishlists.models.Wishlist;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+
+import java.util.Map;
 
 @Controller
 public class WishlistsController {
@@ -49,12 +52,12 @@ public class WishlistsController {
      * Get the wishlist of the user
      */
     @GetMapping("/wishlists/user/{pseudo}")
-    public ResponseEntity<Iterable<Wishlist>> getWishlist(@PathVariable String pseudo) {
+    public ResponseEntity<Map<Wishlist, Product>> getWishlist(@PathVariable String pseudo) {
         if (pseudo == null || pseudo.isBlank()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        Iterable<Wishlist> wishlist = wishlistsService.readAll(pseudo);
-        if (wishlist == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        else return new ResponseEntity<>(wishlist, HttpStatus.OK);
+        Map<Wishlist, Product> map = wishlistsService.readAll(pseudo);
+        if (map == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /**

@@ -1,16 +1,23 @@
 package be.vinci.wishlists;
 
+import be.vinci.wishlists.models.Product;
 import be.vinci.wishlists.models.Wishlist;
+import be.vinci.wishlists.repositories.ProductProxy;
 import be.vinci.wishlists.repositories.WishlistRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class WishlistsService {
 
     private final WishlistRepository repository;
+    private final ProductProxy productProxy;
 
-    public WishlistsService(WishlistRepository repository) {
+    public WishlistsService(WishlistRepository repository, ProductProxy productProxy) {
         this.repository = repository;
+        this.productProxy = productProxy;
     }
 
     public boolean createOne(Wishlist wishlist) {
@@ -24,8 +31,17 @@ public class WishlistsService {
         return true;
     }
 
-    public Iterable<Wishlist> readAll(String pseudo) {
-        return repository.findByPseudo(pseudo);
+    public Map<Wishlist, Product> readAll(String pseudo) {
+        Iterable<Wishlist> wishlists = repository.findByPseudo(pseudo);
+
+        Map<Wishlist, Product> wishlistProductMap = new HashMap<>();
+        for (Wishlist wishlist : wishlists) {
+            Product product = productProxy.readOne(wishlist.getProduct());
+            if (product != null) {
+                wishlistProductMap.put(wishlist, product);
+            }
+        }
+        return wishlistProductMap;
     }
 
     public boolean deleteWishlist(String pseudo) {

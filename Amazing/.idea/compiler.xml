@@ -10,13 +10,17 @@
         <module name="wishlists" />
         <module name="eureka" />
         <module name="users" />
+        <module name="gateway" />
         <module name="products" />
+        <module name="authentication" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="authentication" options="-parameters" />
       <module name="eureka" options="-parameters" />
+      <module name="gateway" options="-parameters" />
       <module name="products" options="-parameters" />
       <module name="users" options="-parameters" />
       <module name="wishlists" options="-parameters" />
